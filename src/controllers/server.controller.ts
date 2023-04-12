@@ -1,6 +1,11 @@
 import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { DockerServerService } from '@/services/DockerServerService';
 
+interface ServerCreateBody {
+    targetVersion: string;
+    type?: "vanilla", "forge", "paper", "fabric"
+}
+
 @Controller("/api/server")
 export class ServerController {
   constructor(private readonly server: DockerServerService) {}
@@ -21,9 +26,10 @@ export class ServerController {
         return servers;
     }
 
-    @Post(["/", "/create"])
-    createServer(): string {
-        return this.server.Create();
+    @Post(["/create"])
+    async createServer(@Body() body: ServerCreateBody): Promise<object> {
+        const { targetVersion, type } = body;
+        return await this.server.Create(targetVersion, type);
     }
 
     @Delete("/delete")
