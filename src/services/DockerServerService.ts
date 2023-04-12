@@ -7,6 +7,7 @@ import { Server, Prisma } from '@prisma/client';
 import randomName from '@/lib/helpers/randomname';
 
 import fs from 'fs';
+import { exec } from 'child_process';
 
 /* https://github.com/itzg/docker-minecraft-server/blob/master/README.md */
 @Injectable()
