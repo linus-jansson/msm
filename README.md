@@ -1,4 +1,5 @@
-# msm-api
+# msm-api <span style="font-size:12px">Project is highly inspired by [juaneth/Omnipetal-Daemon](https://github.com/juaneth/Omnipetal-Daemon)</span>
+**Msm Api** is a REST API to create and manage **minecraft servers** with Docker. 
 
 # Requirments
 - Docker Engine vX.xx.x
