@@ -1,0 +1,12 @@
+const hundred_adjectives = ["Abundant","Acceptable","Adorable","Agile","Alert","Amiable","Ample","Appealing","Attractive","Beautiful","Blissful","Bold","Brave","Bright","Brilliant","Calm","Captivating","Careful","Cheerful","Chirpy","Classic","Clean","Clear","Colorful","Comfortable","Confident","Cozy","Creative","Cute","Daring","Dark","Dazzling","Delicate","Delicious","Delightful","Desirable","Determined","Devoted","Distinguished","Divine","Dynamic","Easygoing","Elegant","Energetic","Enthusiastic","Exciting","Exquisite","Fabulous","Fantastic","Fashionable","Fast","Fearless","Fiery","Flawless","Flexible","Flowing","Flourishing","Fresh","Friendly","Fun","Funny","Gentle","Genuine","Gifted","Glamorous","Gleaming","Glowing","Golden","Gorgeous","Graceful","Grand","Great","Handsome","Happy","Harmonious","Healthy","Heartwarming","Heavenly","Honest","Honorable","Hopeful","Humble","Humorous","Ideal","Imaginative","Impressive","Incredible","Independent","Innovative","Inspiring","Intellectual","Intense","Interesting","Intriguing","Invigorating","Joyful","Jubilant","Juicy","Jovial","Joyous",]
+const hunderd_animals = ["Aardvark","Albatross","Alligator","Alpaca","Anaconda","Ant","Anteater","Antelope","Ape","Armadillo","Baboon","Badger","Bat","Bear","Beaver","Bee","Beetle","Bison","Blackbird","Bluebird","Boa","Boar","Bobcat","Buffalo","Butterfly","Buzzard","Camel","Capybara","Caribou","Cat","Cheetah","Chimpanzee","Chinchilla","Chipmunk","Clam","Cobra","Cockroach","Cod","Condor","Cougar","Cow","Coyote","Crab","Crane","Crocodile","Crow","Cuckoo","Deer","Dog","Dolphin","Donkey","Dove","Dragonfly","Duck","Eagle","Eel","Elephant","Elk","Falcon","Ferret","Finch","Firefly","Fish","Flamingo","Flea","Fly","Fox","Frog","Gazelle","Gecko","Giraffe","Goat","Gopher","Gorilla","Grasshopper","Grouse","Grizzly bear","Groundhog","Guinea pig","Hamster","Hare","Hawk","Hedgehog","Hermit crab","Heron","Hippopotamus","Horse","Hummingbird","Hyena","Ibex","Iguana","Jackal","Jaguar","Jellyfish","Kangaroo","Koala","Komodo dragon","Kudu","Ladybug","Lemur",]
+
+export default function randomName() {
+    const random_adjective = hundred_adjectives[Math.floor(Math.random() * hundred_adjectives.length)];
+    const random_animal = hunderd_animals[Math.floor(Math.random() * hunderd_animals.length)];
+    // generate random 4 numbers as string
+    const random4Chars = Math.floor(1000 + Math.random() * 9000).toString();
+
+    // return random name (eg . "Healthy-Elephant#5946")
+    return `${random_adjective}-${random_animal}-${random4Chars}`;
+}
