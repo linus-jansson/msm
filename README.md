@@ -1,4 +1,4 @@
-# msm-api <span style="font-size:12px">Project is highly inspired by [juaneth/Omnipetal-Daemon](https://github.com/juaneth/Omnipetal-Daemon)</span>
+# msm-api 
 **Msm Api** is a REST API to create and manage **minecraft servers** with Docker. 
 
 ## Requirments
@@ -55,9 +55,10 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
-## License
+## License & Credits
 
-Nest is [MIT licensed](LICENSE).
+Nest is [MIT licensed](LICENSE). \
+Project is highly inspired by [juaneth/Omnipetal-Daemon](https://github.com/juaneth/Omnipetal-Daemon)
 
 
 ## Roadmap
