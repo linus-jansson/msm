@@ -16,10 +16,22 @@ export class DockerServerService {
         private prisma: PrismaService,
         private readonly mojang: MojangService
     ) {}
+
+    async ExecuteCommand(command: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(stdout);
+            });
+        });
+    }
   
     async Create(
-        targetVersion: string, 
-        _type: string
+        targetVersion?: string, 
+        _type?: string,
+        should_start_after_creation: boolean = false
     ): Promise<object> {
         console.log(targetVersion, _type);
         const new_tag = randomName();
@@ -40,7 +52,8 @@ export class DockerServerService {
                 ports:
                     - 25565:25565
                 environment:
-                    EULA: "TRUE"
+                    - EULA="TRUE"
+                    - VERSION="${new_server_version}"
                 tty: true
                 stdin_open: true
                 restart: unless-stopped
@@ -55,6 +68,10 @@ export class DockerServerService {
         // Create docker-compose.yml
         fs.writeFileSync(`${path}/docker-compose.yml`, docker_compose);
 
+        if (should_start_after_creation)
+        {
+            await this.ExecuteCommand(`cd ${path} && docker-compose up -d`);
+        }
 
         // Create docker ymal to server folder location <servers>/<tag>/docker-compose.yml
         /*
@@ -81,7 +98,11 @@ export class DockerServerService {
 
         // console.log(res);
 
-        return db_result;
+        return {
+            ...db_result,
+            will_start: should_start_after_creation,
+            server_port: 25565,
+        };
     }
 
 }
