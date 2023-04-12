@@ -8,9 +8,6 @@ import randomName from '@/lib/helpers/randomname';
 
 import * as fs from 'fs'
 import { exec } from 'child_process';
-import PATH from 'path';
-
-
 
 /* https://github.com/itzg/docker-minecraft-server/blob/master/README.md */
 @Injectable()
