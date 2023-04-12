@@ -1,0 +1,5 @@
+-- CreateTable
+CREATE TABLE "Auth" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "authKey" TEXT NOT NULL
+);
