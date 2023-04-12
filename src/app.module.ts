@@ -9,6 +9,7 @@ import { MojangController } from './controllers/mojang.controller';
 import { AppService } from '@/services/AppService';
 import { DockerServerService } from '@/services/DockerServerService';
 import { MojangService } from './services/MojangService';
+import { PrismaService } from './services/PrismaService';
 
 @Module({
     imports: [],
@@ -20,7 +21,8 @@ import { MojangService } from './services/MojangService';
     providers: [
         AppService,
         DockerServerService, // Definitions for the server creation
-        MojangService
+        MojangService,
+        PrismaService
     ],
 })
 export class AppModule {}
