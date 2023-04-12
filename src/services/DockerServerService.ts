@@ -6,8 +6,11 @@ import { MojangService } from './MojangService';
 import { Server, Prisma } from '@prisma/client';
 import randomName from '@/lib/helpers/randomname';
 
-import fs from 'fs';
+import * as fs from 'fs'
 import { exec } from 'child_process';
+import PATH from 'path';
+
+
 
 /* https://github.com/itzg/docker-minecraft-server/blob/master/README.md */
 @Injectable()
@@ -27,23 +30,26 @@ export class DockerServerService {
         const new_server_type = _type || "vanilla";
 
         const servers_path = process.cwd();
-        const path = `${servers_path}/${new_tag}/`
+        console.log(servers_path)
+        const path = `${servers_path}/servers/${new_tag}/`;
+        console.log(path)
+
         const docker_compose = `
         version: "3"
 
         services:
-        mc:
-            image: itzg/minecraft-server
-            ports:
-                - 25565:25565
-            environment:
-                EULA: "TRUE"
-            tty: true
-            stdin_open: true
-            restart: unless-stopped
-            volumes:
-                # attach a directory relative to the directory containing this compose file
-                - ./server_data:/data
+            "${new_tag}":
+                image: itzg/minecraft-server
+                ports:
+                    - 25565:25565
+                environment:
+                    EULA: "TRUE"
+                tty: true
+                stdin_open: true
+                restart: unless-stopped
+                volumes:
+                    # attach a directory relative to the directory containing this compose file
+                    - ./server_data:/data
         `;
         // Create server folder
         fs.mkdirSync(path, {recursive: true});
