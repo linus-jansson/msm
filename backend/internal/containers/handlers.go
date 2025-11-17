@@ -19,11 +19,6 @@ func (h *HTTPHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/containers", h.handleList)
 }
 
-type ErrorResponse struct {
-	Error   string `json:"error"`
-	Message string `json:"message"`
-}
-
 func (h *HTTPHandler) handleList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
