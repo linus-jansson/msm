@@ -1,12 +1,18 @@
 package httpserver
 
 import (
+	"io"
 	"net/http"
 
 	"linus-jansson/msm/internal/containers"
 )
 
-func New() (http.Handler, error) {
+type Server struct {
+	handler http.Handler
+	cleanup func() error
+}
+
+func New() (*Server, error) {
 	mux := http.NewServeMux()
 
 	// Basic health endpoint
@@ -29,5 +35,21 @@ func New() (http.Handler, error) {
 	// images.NewHTTPHandler(...).RegisterRoutes(mux)
 	// auth.NewHTTPHandler(...).RegisterRoutes(mux)
 
-	return mux, nil
+	return &Server{
+		handler: mux,
+		cleanup: func() error {
+			if closer, ok := interface{}(dockerAPI).(io.Closer); ok {
+				return closer.Close()
+			}
+			return nil
+		},
+	}, nil
+}
+
+func (s *Server) Handler() http.Handler {
+	return s.handler
+}
+
+func (s *Server) Close() error {
+	return s.cleanup()
 }

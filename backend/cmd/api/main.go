@@ -13,13 +13,14 @@ import (
 )
 
 func main() {
-	handler, err := httpserver.New()
+	srv, err := httpserver.New()
 	if err != nil {
 		log.Fatal(err)
 	}
-	srv := &http.Server{
+	defer srv.Close()
+	httpServer := &http.Server{
 		Addr:         ":8080",
-		Handler:      handler,
+		Handler:      srv.Handler(),
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  60 * time.Second,
@@ -27,7 +28,7 @@ func main() {
 
 	go func() {
 		log.Println("API server running on :8080")
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Could not listen on :8080: %v\n", err)
 		}
 	}()
@@ -41,7 +42,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := srv.Shutdown(ctx); err != nil {
+	if err := httpServer.Shutdown(ctx); err != nil {
 		log.Fatalf("Server forced to shutdown: %v", err)
 	}
 
