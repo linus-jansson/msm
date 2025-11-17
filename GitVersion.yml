@@ -1,0 +1,41 @@
+mode: ContinuousDeployment
+branches:
+  main:
+    tag: next
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+
+  feature:
+    tag: feature-{BranchName}
+    increment: Patch
+    regex: feature?[/-]
+
+  hotfix:
+    tag: hotfix
+    increment: Patch
+    regex: hotfix?[/-]
+
+  release:
+    tag: rc
+    increment: Patch
+    regex: release?[/-]
+
+  pull-request:
+    tag: pr-{PullRequestNumber}
+    increment: Patch
+    regex: ^(pull|pr)[/-]
+
+  develop:
+    tag: alpha
+    increment: Minor
+    regex: dev(elop)?$
+
+ignore:
+  sha: []
+commit-message-incrementing: Enabled
+commit-message-strategies:
+  - MergeMessage
+  - ConventionalCommits
+  - CommitMessageIncrementing
+tag-prefix: "v"

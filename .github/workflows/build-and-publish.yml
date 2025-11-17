@@ -25,6 +25,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v4.2.0
+        with:
+          versionSpec: '6.x'
+
+      - name: Determine version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v4.2.0
+        with:
+          useConfigFile: true           # assumes GitVersion.yml in repo
+          configFilePath: GitVersion.yml
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -42,7 +56,8 @@ jobs:
         with:
           images: ${{ env.BACKEND_IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=${{ steps.gitversion.outputs.semVer }}
             type=sha
             type=ref,event=tag
 
@@ -52,7 +67,8 @@ jobs:
         with:
           images: ${{ env.FRONTEND_IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=${{ steps.gitversion.outputs.semVer }}
             type=sha
             type=ref,event=tag
 
@@ -64,6 +80,8 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta_backend.outputs.tags }}
           labels: ${{ steps.meta_backend.outputs.labels }}
+          build-args: |
+            VERSION=${{ steps.gitversion.outputs.semVer }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -75,6 +93,8 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta_frontend.outputs.tags }}
           labels: ${{ steps.meta_frontend.outputs.labels }}
+          build-args: |
+            VERSION=${{ steps.gitversion.outputs.semVer }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -82,3 +102,4 @@ jobs:
         run: |
           echo "Backend push: $[[ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') ]]"
           echo "Frontend push: $[[ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') ]]"
+          echo "Calculated version: ${{ steps.gitversion.outputs.semVer }}"
