@@ -4,10 +4,10 @@ on:
   push:
     branches: ["**"]
     tags: ["*"]
-    paths:
-      - 'backend/**'
-      - 'frontend/**'
-      - '.github/workflows/build-and-publish.yml'
+    # paths:
+    #   - 'backend/**'
+    #   - 'frontend/**'
+    #   - '.github/workflows/build-and-publish.yml'
   workflow_dispatch:
 
 env:
