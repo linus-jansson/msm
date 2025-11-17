@@ -1,7 +1,9 @@
 package containers
 
 import (
+	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -14,7 +16,12 @@ func NewHTTPHandler(svc *Service) *HTTPHandler {
 }
 
 func (h *HTTPHandler) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/api/containers", h.handleList)
+	mux.HandleFunc("GET /api/containers", h.handleList)
+}
+
+type ErrorResponse struct {
+	Error   string `json:"error"`
+	Message string `json:"message"`
 }
 
 func (h *HTTPHandler) handleList(w http.ResponseWriter, r *http.Request) {
@@ -22,10 +29,29 @@ func (h *HTTPHandler) handleList(w http.ResponseWriter, r *http.Request) {
 
 	containers, err := h.svc.List(ctx)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error:   "internal_error",
+			Message: "Failed to list containers",
+		})
+		// Todo : replace with dedicated logging
+		log.Printf("error listing containers: %v", err)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(containers); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error:   "encoding_error",
+			Message: "Failed to encode response",
+		})
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(containers)
+	w.Write(buf.Bytes())
 }
