@@ -2,7 +2,7 @@ BIN_DIR := bin
 TARGET := $(BIN_DIR)/msm-api
 SRC_DIR := ./backend
 
-.PHONY: all build clean
+.PHONY: all build test clean
 
 all: build
 
@@ -12,3 +12,6 @@ build:
 
 clean:
 	rm -rf $(BIN_DIR)
+
+test:
+	cd $(SRC_DIR) && go test ./...
