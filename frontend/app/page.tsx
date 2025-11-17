@@ -3,8 +3,32 @@ import { StatusCard } from '@/components/status-card'
 import { ServerGrid } from '@/components/server-grid'
 import { RecentActivity } from '@/components/recent-activity'
 import { Activity, AlertCircle } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-export default function DashboardPage() {
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+
+// TODO : Den prerenderar normalt inte dynamiskt ; men vi behöver fetcha så att connection status är korrekt.
+export const dynamic = 'force-dynamic';
+
+async function testConnection(): Promise<boolean> {
+	try {
+		const response = await fetch(`${API_BASE_URL}/healthz`);
+		if (!response.ok) {
+			console.log("Connection to backend not successful", response);
+			return false;
+		}
+		console.log('Connection successful');
+		return true;
+	}
+	catch (error) {
+		console.error('Error connecting to the API:', error);
+		return false;
+	}
+}
+
+export default async function DashboardPage() {
+	const isConnected = await testConnection();
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
@@ -13,7 +37,16 @@ export default function DashboardPage() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sidebar-primary">
             <Activity className="h-6 w-6 text-sidebar-primary-foreground" />
           </div>
-          <h1 className="text-xl font-bold text-sidebar-foreground">GameServ</h1>
+					<div
+						className={cn(
+							'rounded-full px-3 py-1 text-xs font-medium',
+							isConnected
+								? 'bg-green-500/10 text-green-400'
+								: 'bg-red-500/10 text-red-400'
+						)}
+					>
+						{isConnected ? <span className="animate-pulse">● Connected</span> : <span>● Disconnected</span>}
+					</div>
         </div>
         <SidebarNav />
       </aside>
