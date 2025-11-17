@@ -1,38 +1,11 @@
 workflow: GitHubFlow/v1
-
 mode: ContinuousDeployment
-
-tag-prefix: "v"
-
+tag-prefix: '[vV]?'
 commit-message-incrementing: Enabled
-commit-message-strategies:
-  - ConventionalCommits
-
-major-version-bump-message: "BREAKING CHANGE"
-minor-version-bump-message: "^feat"
-patch-version-bump-message: "^fix"
+major-version-bump-message: 'BREAKING CHANGE'
+minor-version-bump-message: '^feat'
+patch-version-bump-message: '^fix'
 
 branches:
   main:
-    regex: ^master$|^main$
-    is-main-branch: true
     label: next
-    increment: Inherit
-
-  feature:
-    regex: ^(fix|feat|bugfix|chore|refactor|ci)[\/-](?<BranchName>.+)
-    label: useBranchName
-    increment: Inherit
-
-  pull-request:
-    regex: ^(pull|pr)[\/-](?<Number>\d+)
-    label: pr-{Number}
-    increment: Inherit
-
-  unknown:
-    regex: .*
-    label: useBranchName
-    increment: Inherit
-
-ignore:
-  sha: []
