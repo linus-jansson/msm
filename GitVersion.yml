@@ -1,0 +1,11 @@
+workflow: GitHubFlow/v1
+mode: ContinuousDeployment
+tag-prefix: '[vV]?'
+commit-message-incrementing: Enabled
+major-version-bump-message: 'BREAKING CHANGE'
+minor-version-bump-message: '^feat'
+patch-version-bump-message: '^fix'
+
+branches:
+  main:
+    label: next
